@@ -1,24 +1,18 @@
-github-markdown-toc
-===================
-
-This is a golang based implementation of the
-[github-markdown-toc](https://github.com/ekalinin/github-markdown-toc) tool.
+# github-markdown-toc
 
 The advantages of this implementation:
 
-  * no dependencies (no need curl, wget, awk, etc.)
-  * cross-platform (support for Windows, Mac OS, etc.)
-  * regexp for parsing TOC
-  * parallel processing of multiple documents
+* no dependencies (no need curl, wget, awk, etc.)
+* cross-platform (support for Windows, Mac OS, etc.)
+* regexp for parsing TOC
+* parallel processing of multiple documents
 
+> ⚠️ **IMPORTANT**: `gh-md-toc` is able to work properly only if your machine is connected to the internet because it leverages the `/markdown` endpoint of the GitHub API for Markdown parsing.
 
-*Attention*: gh-md-toc is able to work properly only if your machine is
-connected to the Internet.
+## Table of Contents
 
-Table of Contents
-=================
-
-  * [github-markdown-toc](#github-markdown-toc)
+* [github-markdown-toc](#github-markdown-toc)
+  * [Table of Contents](#table-of-contents)
   * [Installation](#installation)
     * [Precompiled binaries](#precompiled-binaries)
     * [Compiling from source](#compiling-from-source)
@@ -31,22 +25,19 @@ Table of Contents
     * [Multiple files](#multiple-files)
     * [Combo](#combo)
     * [Depth](#depth)
-    * [No Escape](#no-escape)
-    * [Github token](#github-token)
-    * [Bash/ZSH auto\-complete](#bashzsh-auto-complete)
+    * [No escape](#no-escape)
+    * [GitHub token](#github-token)
+    * [Bash/ZSH auto-complete](#bashzsh-auto-complete)
+  * [Alpine Linux](#alpine-linux)
   * [LICENSE](#license)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
+## Installation
 
-Installation
-============
-
-Precompiled binaries
---------------------
+### Precompiled binaries
 
 See the releases page, "Downloads" section:
 
-  * https://github.com/ekalinin/github-markdown-toc.go/releases
+* <https://github.com/ekalinin/github-markdown-toc.go/releases>
 
 For example:
 
@@ -58,8 +49,7 @@ $ ./gh-md-toc --version
 0.4.0
 ```
 
-Compiling from source
----------------------
+### Compiling from source
 
 You need golang installed is your OS:
 
@@ -78,16 +68,13 @@ Args:
 
 ```
 
-Homebew (Mac only)
-------------------
-
+### Homebew (Mac only)
 
 ```bash
-$ brew install github-markdown-toc
+brew install github-markdown-toc
 ```
 
-Tests
-=====
+## Tests
 
 ```bash
 $ make test
@@ -95,11 +82,9 @@ coverage: 28.8% of statements
 ok      _~/projects/my/github-toc.go    0.003s
 ```
 
-Usage
-=====
+## Usage
 
-STDIN
------
+### STDIN
 
 Here's an example of TOC creating for markdown from STDIN:
 
@@ -113,8 +98,7 @@ Here's an example of TOC creating for markdown from STDIN:
   * [License](#license)
 ```
 
-Local files
------------
+### Local files
 
 Here's an example of TOC creating for a local README.md:
 
@@ -132,12 +116,11 @@ Table of Contents
   * [License](#license)
 ```
 
-Remote files
-------------
+### Remote files
 
 And here's an example, when you have a README.md like this:
 
-  * [README.md without TOC](https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md)
+* [README.md without TOC](https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md)
 
 And you want to generate TOC for it.
 
@@ -190,11 +173,9 @@ README.md.
 
 And here is a result:
 
-  * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
+* [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
 
-
-Multiple files
---------------
+### Multiple files
 
 It supports multiple files as well:
 
@@ -223,7 +204,7 @@ Processing of multiple documents is in parallel mode since version 0.4.0
 You can use (old) serial mode by passing option ``--serial`` in the console:
 
 ```bash
-$ ./gh-md-toc --serial ...
+./gh-md-toc --serial ...
 ```
 
 Timings:
@@ -244,9 +225,7 @@ user    0m0.036s
 sys     0m0.004s
 ```
 
-
-Combo
------
+### Combo
 
 You can easily combine both ways:
 
@@ -270,8 +249,7 @@ You can easily combine both ways:
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 ```
 
-Depth
------
+### Depth
 
 Use `--depth=INT` to control how many levels of headers to include in the TOC
 
@@ -287,8 +265,7 @@ Table of Contents
   * [License](#license)
 ```
 
-No escape
----------
+### No escape
 
 ```bash
 ➥ ./gh-md-toc ~/projects/my/Dockerfile.vim/README.md | grep Docker
@@ -298,12 +275,11 @@ No escape
 * [Dockerfile.vim](#dockerfilevim)
 ```
 
-Github token
-------------
+### GitHub token
 
 All your tokents are [here](https://github.com/settings/tokens).
 
-Example for cli argument:
+Example for CLI argument:
 
 ```bash
 ➥ ./gh-md-toc --depth=1 --token=2a2dabe1f2c2399bd542ba93fe6ce70fe7898563 README.md
@@ -311,12 +287,25 @@ Example for cli argument:
 Table of Contents
 =================
 
-* [github\-markdown\-toc](#github-markdown-toc)
-* [Table of Contents](#table-of-contents)
-* [Installation](#installation)
-* [Tests](#tests)
-* [Usage](#usage)
-* [LICENSE](#license)
+* [github-markdown-toc](#github-markdown-toc)
+  * [Table of Contents](#table-of-contents)
+  * [Installation](#installation)
+    * [Precompiled binaries](#precompiled-binaries)
+    * [Compiling from source](#compiling-from-source)
+    * [Homebew (Mac only)](#homebew-mac-only)
+  * [Tests](#tests)
+  * [Usage](#usage)
+    * [STDIN](#stdin)
+    * [Local files](#local-files)
+    * [Remote files](#remote-files)
+    * [Multiple files](#multiple-files)
+    * [Combo](#combo)
+    * [Depth](#depth)
+    * [No escape](#no-escape)
+    * [GitHub token](#github-token)
+    * [Bash/ZSH auto-complete](#bashzsh-auto-complete)
+  * [Alpine Linux](#alpine-linux)
+  * [LICENSE](#license)
 ```
 
 Example for environment variable:
@@ -327,18 +316,28 @@ Example for environment variable:
 Table of Contents
 =================
 
-* [github\-markdown\-toc](#github-markdown-toc)
-* [Table of Contents](#table-of-contents)
-* [Installation](#installation)
-* [Tests](#tests)
-* [Usage](#usage)
-* [LICENSE](#license)
+* [github-markdown-toc](#github-markdown-toc)
+  * [Table of Contents](#table-of-contents)
+  * [Installation](#installation)
+    * [Precompiled binaries](#precompiled-binaries)
+    * [Compiling from source](#compiling-from-source)
+    * [Homebew (Mac only)](#homebew-mac-only)
+  * [Tests](#tests)
+  * [Usage](#usage)
+    * [STDIN](#stdin)
+    * [Local files](#local-files)
+    * [Remote files](#remote-files)
+    * [Multiple files](#multiple-files)
+    * [Combo](#combo)
+    * [Depth](#depth)
+    * [No escape](#no-escape)
+    * [GitHub token](#github-token)
+    * [Bash/ZSH auto-complete](#bashzsh-auto-complete)
+  * [Alpine Linux](#alpine-linux)
+  * [LICENSE](#license)
 ```
 
-Bash/ZSH auto-complete
-----------------------
-
-
+### Bash/ZSH auto-complete
 
 Just add a simple command into your `~/.bashrc` or `~/.zshrc`:
 
@@ -350,8 +349,7 @@ eval "$(gh-md-toc --completion-script-zsh)"
 eval "$(gh-md-toc --completion-script-bash)"
 ```
 
-Alpine Linux
-============
+## Alpine Linux
 
 Alpine Linux uses _musl_ instead of _glibc_ by default. If you install [`binutils`](https://pkgs.alpinelinux.org/packages?name=binutils&repo=main&arch=x86_64) and run…
 
@@ -366,9 +364,6 @@ readelf -l /path/to/gh-md-toc
 apk add libc6-compat
 ```
 
+## LICENSE
 
-LICENSE
-=======
-
-See [LICENSE](https://github.com/ekalinin/github-markdown-toc.go/blob/master/LICENSE)
-file.
+See [LICENSE](https://github.com/ekalinin/github-markdown-toc.go/blob/master/LICENSE) file.
