@@ -1,0 +1,91 @@
+env:
+  # - CGO_ENABLED=0
+  - GO111MODULE=on
+
+project_name: gh-md-toc
+dist: ../dist
+
+changelog:
+  skip: true
+
+before:
+  hooks:
+    # - go clean -i -r -x -testcache -modcache -cache
+    - go mod download
+
+snapshot:
+  name_template: "0.0.0-{{.ShortCommit}}"
+
+builds:
+  - id: ghmd_linux
+    main: .
+    binary: gh-md-toc
+    goos:
+      - linux
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+  - id: ghmd_windows
+    main: .
+    binary: gh-md-toc
+    goos:
+      - windows
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+  - id: ghmd_macos
+    main: .
+    binary: gh-md-toc
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w -X main.commit={{.Commit}} -X main.date={{.Date}}
+    hooks:
+      post: gon -log-level=info -log-json ../notarization.hcl
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_src"
+  format: tar.gz
+
+archives:
+  - id: lindows
+    builds:
+      - ghmd_linux
+      - ghmd_windows
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    # replacements:
+    wrap_in_directory: false
+    format: zip
+    files:
+      - none*
+
+  - id: macos
+    builds:
+      - ghmd_macos
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}2"
+    # replacements:
+    wrap_in_directory: false
+    format: zip
+    files:
+      - none*
+
+  # brews:
+  # nfpms:
+
+checksum:
+  name_template: "{{ .ProjectName }}_checksums.txt"
+  algorithm: sha256
+
+signs:
+  - id: lindows
+    signature: "${artifact}.sig"
+    cmd: gpg2
+    args: ["--output", "${signature}", "--detach-sign", "${artifact}"]
+    artifacts: all

@@ -11,27 +11,28 @@ import (
 	"strings"
 )
 
-// GHToc GitHub TOC
+// GHToc represents the GitHub TOC.
 type GHToc []string
 
-// Print print TOC to the console
+// Print will print the TOC to the console.
 func (toc *GHToc) Print() {
 	for _, tocItem := range *toc {
 		fmt.Println(tocItem)
 	}
+
 	fmt.Println()
 }
 
-// GHDoc GitHub document
+// GHDoc represents the GitHub document.
 type GHDoc struct {
 	Path     string
-	AbsPaths bool
-	Depth    int
-	Escape   bool
 	GhToken  string
-	Indent   int
-	Debug    bool
 	html     string
+	Depth    int
+	Indent   int
+	AbsPaths bool
+	Escape   bool
+	Debug    bool
 }
 
 // NewGHDoc create GHDoc
@@ -50,9 +51,12 @@ func (doc *GHDoc) IsRemoteFile() bool {
 	u, err := url.Parse(doc.Path)
 	if err != nil || u.Scheme == "" {
 		doc.d("IsRemoteFile: false")
+
 		return false
 	}
+
 	doc.d("IsRemoteFile: true")
+
 	return true
 }
 
@@ -63,6 +67,7 @@ func (doc *GHDoc) Convert2HTML() error {
 
 	if doc.IsRemoteFile() {
 		htmlBody, ContentType, err := httpGet(doc.Path)
+
 		doc.d("Convert2HTML: remote file. content-type: " + ContentType)
 		if err != nil {
 			return err
@@ -80,23 +85,31 @@ func (doc *GHDoc) Convert2HTML() error {
 		if err != nil {
 			return err
 		}
+
 		defer tmpfile.Close()
 		doc.Path = tmpfile.Name()
+
 		if err = ioutil.WriteFile(tmpfile.Name(), htmlBody, 0644); err != nil {
 			return err
 		}
 	}
+
 	doc.d("Convert2HTML: local file: " + doc.Path)
+
 	if _, err := os.Stat(doc.Path); os.IsNotExist(err) {
 		return err
 	}
+
 	htmlBody, err := ConvertMd2Html(doc.Path, doc.GhToken)
+
 	doc.d("Convert2HTML: converted to html, size: " + strconv.Itoa(len(htmlBody)))
 	if err != nil {
 		return err
 	}
+
 	// doc.d("Convert2HTML: " + htmlBody)
 	doc.html = htmlBody
+
 	return nil
 }
 
@@ -114,31 +127,38 @@ func (doc *GHDoc) GrabToc() *GHToc {
 
 	toc := GHToc{}
 	minHeaderNum := 6
+
 	var groups []map[string]string
+
 	doc.d("GrabToc: matching ...")
 	for idx, match := range r.FindAllStringSubmatch(doc.html, -1) {
 		doc.d("GrabToc: match #" + strconv.Itoa(idx) + " ...")
 		group := make(map[string]string)
+
 		// fill map for groups
 		for i, name := range r.SubexpNames() {
 			if i == 0 || name == "" {
 				continue
 			}
+
 			doc.d("GrabToc: process group: " + name + " ...")
-			group[name] = removeStuf(match[i])
+			group[name] = removeStuff(match[i])
 		}
+
 		// update minimum header number
 		n, _ := strconv.Atoi(group["num"])
+
 		if n < minHeaderNum {
 			minHeaderNum = n
 		}
+
 		groups = append(groups, group)
 	}
 
 	var tmpSection string
+
 	doc.d("GrabToc: processing groups ...")
 	for _, group := range groups {
-		// format result
 		n, _ := strconv.Atoi(group["num"])
 		if doc.Depth > 0 && n > doc.Depth {
 			continue
@@ -149,14 +169,15 @@ func (doc *GHDoc) GrabToc() *GHToc {
 			link = doc.Path + link
 		}
 
-		tmpSection = removeStuf(group["name"])
+		tmpSection = removeStuff(group["name"])
 		if doc.Escape {
 			tmpSection = EscapeSpecChars(tmpSection)
 		}
+
 		tocItem := strings.Repeat(listIndentation(), n-minHeaderNum) + "* " +
 			"[" + tmpSection + "]" +
 			"(" + link + ")"
-		//fmt.Println(tocItem)
+
 		toc = append(toc, tocItem)
 	}
 
@@ -169,5 +190,6 @@ func (doc *GHDoc) GetToc() *GHToc {
 		log.Fatal(err)
 		return nil
 	}
+
 	return doc.GrabToc()
 }

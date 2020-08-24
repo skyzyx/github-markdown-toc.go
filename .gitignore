@@ -1,5 +1,8 @@
 *.swp
 *.tgz
-TODO.md
-gh-md-toc
+bin/
 build
+dist/*
+gh-md-toc
+src/dist/*
+TODO.md
